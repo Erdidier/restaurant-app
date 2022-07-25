@@ -7,7 +7,7 @@ import AppContext from "./context";
 import Cookies from "js-cookie";
 
 function CheckoutForm() {
-  const [data, setData] = useState({
+  const [d, setD] = useState({
     address: "",
     city: "",
     state: "",
@@ -20,9 +20,9 @@ function CheckoutForm() {
 
   function onChange(e) {
     // set the key = to the name property equal to the value typed
-    const updateItem = (data[e.target.name] = e.target.value);
+    const updateItem = (d[e.target.name] = e.target.value);
     // update the state data object
-    setData({ ...data, updateItem });
+    setD({ ...d, updateItem });
   }
 
   async function submitOrder() {
@@ -42,18 +42,27 @@ function CheckoutForm() {
     console.log(userToken);
     const response = await fetch(`${API_URL}/orders`, {
       method: "POST",
-      headers: userToken && { Authorization: `Bearer ${userToken}` },
+      headers: userToken && { 
+        Authorization: `Bearer ${userToken}`,
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify({
-        amount: Number(Math.round(appContext.cart.total + "e2") + "e-2"),
-        dishes: appContext.cart.items,
-        address: data.address,
-        city: data.city,
-        state: data.state,
-        token: "tok_visa",
+        data: {
+          amount: parseInt(Math.round(appContext.cart.total + "e2") + "e-2"),
+          dishes: appContext.cart.items,
+          address: d.address,
+          city: d.city,
+          state: d.state,
+          token: "tok_visa"
+        }
       }),
     });
 
     if (!response.ok) {
+      setError(response.statusText);
+      console.log(response);
+    } else {
       setError(response.statusText);
       console.log("SUCCESS")
     }
@@ -94,7 +103,7 @@ function CheckoutForm() {
         </div>
       </FormGroup>
 
-      <CardSection data={data} stripeError={error} submitOrder={submitOrder} />
+      <CardSection data={d} stripeError={error} submitOrder={submitOrder} />
 
       <style jsx global>
         {`
