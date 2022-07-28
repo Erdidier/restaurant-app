@@ -39,6 +39,7 @@ function MyApp(props){
           items: [...state.cart.items,temp],
           total: state.cart.total + item.attributes.price,
       }
+      Cookie.set("total", newCart.total);
       setState({cart:newCart})
       console.log(`Total items: ${JSON.stringify(newCart)}`)
     } else {
@@ -54,6 +55,9 @@ function MyApp(props){
           total: state.cart.total + item.attributes.price,
         }
     }
+    Cookie.set("total", newCart.total);
+    console.log(typeof Cookie.get("total"));
+    console.log(parseFloat(Cookie.get("total")));
     setState({cart: newCart});  // problem is this is not updated yet
     console.log(`state reset to cart:${JSON.stringify(state)}`)
      
@@ -79,6 +83,9 @@ function MyApp(props){
       items.splice(index, 1);
       var newCart= { items: items, total: state.cart.total - item.attributes.price } 
     }
+    Cookie.set("total", newCart.total);
+    console.log(typeof Cookie.get("total"));
+    console.log(Cookie.get("total"));
     setState({cart:newCart});
   }
 

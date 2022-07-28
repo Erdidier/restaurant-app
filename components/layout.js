@@ -5,10 +5,12 @@ import Head from "next/head";
 import Link from "next/link";
 import { Container, Nav, NavItem } from "reactstrap";
 import AppContext from "./context";
+import Cookie from "js-cookie";
 
 const Layout = (props) => {
 const title = "Welcome to Nextjs";
-const {user, setUser} = useContext(AppContext);
+const {setUser} = useContext(AppContext);
+const user = Cookie.get("user");
   return (
     <div>
       <Head>
@@ -21,7 +23,6 @@ const {user, setUser} = useContext(AppContext);
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
           crossOrigin="anonymous"
         />
-        <script src="https://js.stripe.com/v3/" />
       </Head>
       <header>
         <style jsx>
@@ -57,8 +58,10 @@ const {user, setUser} = useContext(AppContext);
                 <a
                   className="nav-link"
                   onClick={() => {
-                    logout();
-                    setUser(null);
+                    Cookie.remove("user");
+                    Cookie.remove("userToken");
+                    // logout();
+                    // setUser(null);
                   }}
                 >
                   Logout
